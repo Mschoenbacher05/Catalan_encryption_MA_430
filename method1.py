@@ -1,5 +1,3 @@
-
-
 import math
 
 # Returns an list containing the parsed string
@@ -18,7 +16,32 @@ def parse_message(k,message):
     
     return parsed_message
 
+# Figure out which bits to flip
+def select_bits_to_flip(C_n,position):
+    bits_to_flip = []
+    
+    # Inkeeping with the method outlined in the literature, we will compute two bits to flip per character of the message. 
+    K = int(str(C_n)[position]) # To select a bit we first take a digit in the catalan number
+    bit_to_flip1 = K % 8 # The first bit will just be the number mod 8 to fit it into the 8 bit chars that we are encrypting
+    bits_to_flip.append(bit_to_flip1)
 
+    bit_to_flip2 = (K + 4) % 8 # The second bit has 4 added to that number and then is modded by 8
+    bits_to_flip.append(bit_to_flip2)
+
+    # Return bits_to_flip as the bit indicies that need to be flipped
+    return bits_to_flip
+
+
+
+    
+    pass
+
+# Returns message block with bits flipped
+def flip_bits(C_n,k,message_block):
+    for chunk in message_block:
+        for char in chunk:
+            binary = format(ord(char), '08b')  # Extract binary from the char as a string
+            indicies_to_flip = bits
 
 
 class node():
@@ -36,13 +59,18 @@ class node():
         C_n = self.compute_catalan(n)
         number_of_digits = len(str(C_n))
         parsed_message = parse_message(number_of_digits,message)
+        
+        cipher_text = []
+        # Perform bitswap, and generate ciphertext
+        for chunk in parse_message:
+            cipher_text.append(flip_bits(C_n,number_of_digits,chunk))
 
-        # Perform bitswap
+        # Reconcatenate into a full message
+        encrypted_message = ''
+        for chunk in cipher_text:
+            encrypted_message += chunk
 
-
-
-
-        return message + ' Encrypted'  
+        return encrypted_message
 
     def decrypt(self,message):
         return message + ' Decrypted'
