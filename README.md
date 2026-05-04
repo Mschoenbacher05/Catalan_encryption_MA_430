@@ -24,3 +24,11 @@ Method one consists of the following steps:
 # Method 2:
 
 # Computational Complexity
+
+
+
+# Citations:
+
+https://www.sjoerdlangkemper.nl/2019/04/24/bits-bytes-in-python-2-3/ 
+
+https://www.geeksforgeeks.org/python/python-bitwise-operators/ 
