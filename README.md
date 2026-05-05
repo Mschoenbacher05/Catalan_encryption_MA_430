@@ -6,20 +6,27 @@ The following codes is an implementation of two of the catalan encryption method
 
 2) Node2 is sent and decrypts the message
 
-3) A man in the middle node "sniffs" the encrypted message
+3) We display that the encrypted method can not be decrypted by typical tools
 
-4) We display that the encrypted method can not be decrypted by typical tools
-
-5) We discuss computational complexity of these methods and wether they could work in production as a robust security metric. 
+4) We discuss computational complexity of these methods and wether they could work in production as a robust security metric. 
 
 # Method 1:
 Method one consists of the following steps:
 
 1) Nodes agree on an n value and compute C_n. In this code we are skipping this step and assuming n is given, and simply having node 1 compute C_n [see encrypt()]
 
-2) The message to be sent is parsed into chunks of length k, where k is the number of digits in C_n. In this code this is acomplished via the parse_message() function, which returns the parsed message to encrypt().
+2) The message to be sent is parsed into chunks of length k, where k is the number of digits in C_n. In this code this is accomplished via the parse_message() function, which returns the parsed message to encrypt().
 
-3) 
+3) After the message is parsed, a bit swap is performed on every character in the message. In each character 2 bits are swapped corresponding to that characters index in it's chunk applied to the catalan number, e.g if we are encrypting 'ABC' with the catalan key 429, we will swap the letter A using the number 4. Swaps are done according to the following scheme: 
+
+First bit to swap: catalan value mod 8
+Second bit to swap: catalan value + 4 mod 8
+
+So for the letter A (in binary 01100001) we will swap the 4th and 0th bits. The resulting binary will be 01000000 converted back to ascii as @.
+
+4) The message is sent ciphered
+
+5) THe message is decrypted by re applying the encryption step and reversing the binary back to how it was. 
 
 # Method 2:
 
