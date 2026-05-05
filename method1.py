@@ -1,9 +1,10 @@
 import math
 
 # Returns an list containing the parsed string
-def parse_message(k,message):
-    # Append the end of message flag
-    message += '###'
+def parse_message(k,message,pad):
+    # Append the end of message flag if it is being encrypted, don't if it is being decrypted. 
+    if pad == True:
+        message += '###'
     parsed_message = []
 
     # Fill out the message to be a multiple of k, just using 1's here, but the characters could be anything.
@@ -55,23 +56,24 @@ def flip_bits(C_n,message_chunk):
     return ''.join(ciphertext) # Concatenate the ciphertext intoa  string
 
 class node():
-    def __init__(self):
-        self.message = ''
+    def __init__(self,name):
+        self.n = 8
+        self.name = name
     
     # Used to compute the nth catalan number in the encryption function
-    def compute_catalan(self,n):
-        C_n =  math.factorial(2 * n) // (math.factorial(n + 1) * math.factorial(n))
+    def compute_catalan(self):
+        C_n =  math.factorial(2 * self.n) // (math.factorial(self.n + 1) * math.factorial(self.n))
         return C_n
 
     # N is the nth catalan number to compute
-    def encrypt(self,message,n):
+    def encrypt(self,message):
         # Prepare message for encryption
-        C_n = self.compute_catalan(n)       ## Compute catalan number
+        C_n = self.compute_catalan()       ## Compute catalan number
         number_of_digits = len(str(C_n))    ## Figure out the number of digits that each "Chunk" of the message must be parsed into
-        parsed_message = parse_message(number_of_digits,message)    ## Parse the message into chunks that are equal to the length of the catalan number. E.g if catalan number is 3 digits long, hello world would be parsed into hel|lo |wor|ld |
-        print("Catalan key", C_n)
-        print("Original message",message)
-        print("Parsed message ", parsed_message)
+        parsed_message = parse_message(number_of_digits,message,True)    ## Parse the message into chunks that are equal to the length of the catalan number. E.g if catalan number is 3 digits long, hello world would be parsed into hel|lo |wor|ld |
+        # print("Catalan key", C_n)
+        # print("Original message",message)
+        #p rint("Parsed message ", parsed_message)
 
         cipher_text = []
         # Perform bitswap, and generate ciphertext
@@ -88,20 +90,45 @@ class node():
 
     # Decryption step 
     def decrypt(self,message):
-        return message + ' Decrypted'
+        # Compute the agreed upon catalan number
+        C_n = self.compute_catalan()
+        
+        plaintext = []
+
+        # Prase the cipher text out, do not pad with the ###
+        parsed_ciphertext = parse_message(len(str(C_n)),message,False)
+
+        # Perform bitswap again, this will undo the ciphering we have done. 
+        for chunk in parsed_ciphertext:
+            plaintext.append(flip_bits(C_n,chunk))
+
+        # Reconcatenate bit swapped message into a full message
+        decrypted_message = ''
+        for chunk in plaintext:
+            decrypted_message += chunk
+
+        # Slice out everything after the first # sign
+        final_index_to_keep = decrypted_message.find('###')
+        decrypted_message = decrypted_message[:final_index_to_keep]
+
+        return decrypted_message
+
+        
     
     # 
-    def receive_message(self,message):
-        self.message = message
-        print('Recieved Message: ', self.message)
-        self.message = self.decrypt(self.message)
-        print('Decrypted Message: ', self.message)
+    def receive_message(self,message,n_,node):
+        self.n = n_
+        print( self.name, ' recieved Cipher: ', message, ' from ', node.name)
+        message = self.decrypt(message)
+        print('Decrypted Message: ', message)
         print()
     
-    def send_message(self,message,node):
+    def send_message(self,message,node,):
+        print("Sending message from ",self.name, " to ", node.name)
         to_send = self.encrypt(message)
-        node.receive_message(to_send)
+        node.receive_message(to_send,self.n,self)
 
-n1 = node()
-print("Encrypted Message",n1.encrypt("Hello world",8))
+n1 = node("Node 1")
+n2 = node("Node 2")
 
+n1.send_message("Hello World",n2)
