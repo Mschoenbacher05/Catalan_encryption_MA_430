@@ -30,6 +30,13 @@ So for the letter A (in binary 01100001) we will swap the 4th and 0th bits. The 
 
 # Method 2:
 
+1) Steps 1 and 2 above are completed in the same way
+
+2) Once again we pull a digit from the catalan number that is at the same index of the letter we are encrypting. This time however, rather than converting this into a full byte, we convert it to only a 4 digit binary number, and then append that binary to itself once again to form a full byte. From here we perform another XOR on the byte containing the character and this new catalan byte. 
+
+3) Steps 4 and 5 take place again as before
+
+
 # Computational Complexity
 
 

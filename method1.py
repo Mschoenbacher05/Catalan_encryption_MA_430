@@ -42,7 +42,6 @@ def flip_bits(C_n,message_chunk):
     for i, char in enumerate(message_chunk):
         binary = ord(char)
         indices_to_flip = select_bits_to_flip(C_n,i)
-        
         # Fact: Python has bit operations. We can use XOR on single bits to flip them:
 
         ### This creates first a mask that has all 0's but a 1 at the index to flip, then when you xor,if that spot in the binary variable is 1 you would get a 0 back, or if that spot in the binary is a 0, you would get a 1 back
