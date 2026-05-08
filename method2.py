@@ -114,5 +114,6 @@ class node():
 
 n1 = node("Node 1")
 n2 = node("Node 2")
-
+n1.n = 30
+print(n1.compute_catalan())
 n1.send_message("Hello World",n2)

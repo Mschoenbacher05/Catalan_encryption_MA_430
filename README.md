@@ -6,9 +6,9 @@ The following codes is an implementation of two of the catalan encryption method
 
 2) Node2 is sent and decrypts the message
 
-3) We display that the encrypted method can not be decrypted by typical tools
+3) We discuss computational complexity of these methods.
 
-4) We discuss computational complexity of these methods and wether they could work in production as a robust security metric. 
+4) We discuss the actual security of the method
 
 # Method 1:
 Method one consists of the following steps:
@@ -39,6 +39,12 @@ So for the letter A (in binary 01100001) we will swap the 4th and 0th bits. The 
 
 # Computational Complexity
 
+Both of these methods operate in O(n) time complexity for the encryption step making this a decently efficient algorithm for encryption. 
+
+# Security:
+
+This method is interesting from a theoretical standpoint but not strictly very robust. If this method saw wide scale use, of any kind, and it was known that it relied on bit shifts from catalan digits, it would be trivial to brute force. A simple python script could successfully decrypt any message sent through, unless very large (and therefore difficult to compute) n's were used. It is entirely possible that a large n could be used to successfully encrypt, in the method 2 script I used n - 30 which results in the catalan number 3814986502092304, which would take perhaps a little bit longer, but if a low level language like C was used, the password could likely be brute forced within a couple of minutes. Additionally, because the key is reused on every chunk, the bad actor could save compute by only attempting to decrypt the first n values each time. Therefore, this method is effective only in niche settings where the public does not know the encryption algorithm. It's strength lies in it's niche methodology, but it loses all security once that methodology is made public. 
+
 
 
 # Citations:
@@ -46,3 +52,4 @@ So for the letter A (in binary 01100001) we will swap the 4th and 0th bits. The 
 https://www.sjoerdlangkemper.nl/2019/04/24/bits-bytes-in-python-2-3/ 
 
 https://www.geeksforgeeks.org/python/python-bitwise-operators/ 
+
